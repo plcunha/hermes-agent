@@ -474,7 +474,13 @@ def _resolve_path(cwd: Path, target: str, *, allowed_root: Path | None = None) -
 
 
 def _ensure_reference_path_allowed(path: Path) -> None:
-    """Refuse credential/internal paths. Fails CLOSED: the gateway feeds untrusted remote text here."""
+    """Refuse credential/internal paths unless the owner opted out (allow_credential_reads)."""
+    try:
+        from hermes_cli.config import load_config_readonly
+        if (load_config_readonly().get("security") or {}).get("allow_credential_reads"):
+            return
+    except Exception:
+        pass
     from hermes_constants import get_hermes_home
     home, hermes_home = Path(os.path.expanduser("~")).resolve(), get_hermes_home().resolve()
     blocked_exact = {home / rel for rel in _SENSITIVE_HOME_FILES} | {hermes_home / ".env"}

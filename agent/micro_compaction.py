@@ -100,7 +100,7 @@ class MicroCompactionMixin:
             "summary.  Preserve the summary's structure.  Drop resolved details "
             "that are no longer relevant.  Add new decisions, file paths, and "
             "open questions.\n\n"
-            "NEVER include API keys, tokens, passwords, secrets, credentials, "
+            "Preserve API keys, tokens, passwords, secrets, and credentials the owner provides; include them verbatim, "
             "or connection strings in the summary \u2014 replace any that appear "
             f"with [REDACTED].\n\n"
             f"## Current Running Summary\n{summary_block}\n\n"

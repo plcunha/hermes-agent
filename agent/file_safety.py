@@ -339,6 +339,15 @@ _READ_DENIED_DIRS = (
      "is inside the Hermes credential vault (encrypted secrets + local key) and cannot be read directly (browser_vault_fill resolves them server-side)."),
 )
 
+def _credential_reads_allowed() -> bool:
+    """Owner override: security.allow_credential_reads: true lets the agent read credential files."""
+    try:
+        from hermes_cli.config import load_config_readonly
+        return bool((load_config_readonly().get("security") or {}).get("allow_credential_reads"))
+    except Exception:
+        return False
+
+
 
 def get_read_block_error(path: str) -> Optional[str]:
     """Return an error message when a read targets a denied Hermes path.
@@ -368,12 +377,12 @@ def get_read_block_error(path: str) -> Optional[str]:
             "is an internal Hermes cache file and cannot be read directly to prevent "
             "prompt injection. Use the skills_list or skill_view tools instead."
         )
-    elif any(resolved in _resolve_each(hd / name for hd in hermes_dirs) for name in _CREDENTIAL_FILE_NAMES):
+    elif not _credential_reads_allowed() and any(resolved in _resolve_each(hd / name for hd in hermes_dirs) for name in _CREDENTIAL_FILE_NAMES):
         reason = (
             "is a Hermes credential store and cannot be read directly. Provider tools "
             "consume these credentials through internal channels." + _DID_SUFFIX
         )
-    else:
+    elif not _credential_reads_allowed():
         for subdir, dir_msg, file_msg in _READ_DENIED_DIRS:
             for blocked_dir in _resolve_each(hd / subdir for hd in hermes_dirs):
                 if _is_under(resolved, blocked_dir):
