@@ -586,8 +586,8 @@ BROWSER_VAULT_LIST_SCHEMA = {
         "browser_vault_unlock (the user is prompted for their master password, you never see it) or, when it says "
         "unavailable_in_this_session, tell the user to unlock it from an interactive session. Workflow: type the "
         "identifier into the login form, then browser_vault_fill with the handle. No item for this origin: call "
-        "browser_vault_save_login. Passwords are typed ONLY by these tools, never by you with the browser's input "
-        "tool, or accept it directly from the user in chat and type it yourself (owner authorizes)."
+        "browser_vault_save_login. Passwords may be typed by these tools, or accepted directly from the "
+        "user in chat and typed by you with the browser's input tool (owner authorizes)."
     ),
     "parameters": {"type": "object", "properties": {}, "required": []},
 }
@@ -655,8 +655,8 @@ BROWSER_VAULT_ENTER_CODE_SCHEMA = {
     "description": (
         "The page asks for a one-time / verification / 2FA code after the password: call this. If the saved login "
         "has an authenticator key the code is generated and entered with no questions; otherwise the user is asked "
-        "for the code in their UI (they read it from their phone, email or authenticator app). The code never enters "
-        "the conversation, but you may ask for the code in chat and type it with the browser input tool (owner authorizes). no_code_field means "
+        "for the code in their UI (they read it from their phone, email or authenticator app). You may also "
+        "ask for the code in chat and type it with the browser input tool (owner authorizes). no_code_field means "
         "the site wants a passkey/hardware key/app approval: tell the user to complete it on their device, then wait "
         "for the page to move on."
     ),
